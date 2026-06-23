@@ -1,0 +1,233 @@
+# Arquivo de Configuração - Simulador Etapa 2
+# =============================================
+#
+# Este arquivo define os parâmetros da simulação
+# Formato: CHAVE = VALOR
+#
+# Tipos suportados:
+#   - Números: 1, 1.5, -0.5
+#   - Booleanos: true, false
+#   - Strings: "texto"
+#   - Listas: [1, 2, 3] ou [1.0, 2.0, 3.0]
+
+# ============================================================================
+# CONFIGURAÇÕES MQTT
+# ============================================================================
+
+mqtt:
+  broker: "localhost"
+  port: 1883
+  timeout: 60
+  
+  # Tópicos (não recomenda mudar a menos que saiba o que está fazendo)
+  topicos:
+    lidar: "sensor/lidar"
+    encoder: "sensor/encoder"
+    aceleracao: "actuator/aceleracao"
+    velocidade_setpoint: "actuator/velocidade_setpoint"
+
+# ============================================================================
+# FÍSICA DA SIMULAÇÃO
+# ============================================================================
+
+fisica:
+  # Passo de simulação (em segundos)
+  # Menores = mais precisão, maior CPU
+  # Maiores = menos preciso, menor CPU
+  dt: 0.1
+  
+  # Aceleração da gravidade (não usado atualmente, mas reservado)
+  gravidade: 9.81
+  
+  # Massa do robô (kg)
+  massa: 5.0
+  
+  # Velocidade máxima do robô (m/s)
+  velocidade_maxima: 5.0
+  
+  # Velocidade mínima (parado)
+  velocidade_minima: 0.0
+  
+  # Posição inicial do robô (metros)
+  posicao_inicial: 0.0
+  
+  # Permitir movimento reverso? (robô anda de ré?)
+  permite_re: false
+
+# ============================================================================
+# SENSORES
+# ============================================================================
+
+sensores:
+  lidar:
+    # Desvio padrão do ruído Gaussiano (metros)
+    sigma_ruido: 0.05
+    
+    # Quantização da leitura (metros)
+    # Ex: 0.01 = resolve até 1cm
+    quantizacao: 0.01
+    
+    # Altura mínima medível (metro)
+    altura_minima: 0.5
+    
+    # Frequência de publicação (Hz)
+    frequencia_hz: 10
+  
+  encoder:
+    # Distância por pulso (metros)
+    # Muda de estado a cada X metros
+    metros_por_pulso: 1.0
+
+# ============================================================================
+# TÚNEL
+# ============================================================================
+
+tunel:
+  # Altura nominal do túnel (metros)
+  altura_nominal: 4.0
+  
+  # Comprimento total do túnel para simulação (metros)
+  comprimento_total: 500.0
+  
+  # Gerar falhas pré-configuradas ao iniciar?
+  gerar_falhas_padrao: true
+  
+  # Falhas inseridas no túnel
+  # Formato: {posicao_x: metros, profundidade: ±metros, largura: metros}
+  # profundidade < 0 = buraco
+  # profundidade > 0 = saliência
+  falhas:
+    - posicao_x: 20.0
+      profundidade: -0.8
+      largura: 2.0
+      tipo: "buraco"
+    
+    - posicao_x: 50.0
+      profundidade: 0.6
+      largura: 3.0
+      tipo: "saliencia"
+    
+    - posicao_x: 100.0
+      profundidade: -1.2
+      largura: 4.0
+      tipo: "buraco"
+    
+    - posicao_x: 150.0
+      profundidade: 0.8
+      largura: 2.5
+      tipo: "saliencia"
+
+# ============================================================================
+# RENDERIZAÇÃO (PYGAME)
+# ============================================================================
+
+graficos:
+  # Dimensões da janela (pixels)
+  largura_janela: 1400
+  altura_janela: 600
+  
+  # Taxa de quadros alvo (FPS)
+  fps: 30
+  
+  # Escala de visualização (pixels por metro)
+  pixels_por_metro: 2
+  
+  # Offset da câmera (mantém robô aproximadamente onde?)
+  # 0.33 = terço da tela
+  offset_camera: 0.33
+  
+  # Renderizar grade de referência?
+  mostrar_grid: false
+  
+  # Intervalo da grade (metros)
+  grid_intervalo: 10.0
+  
+  # Cores (formato RGB: 0-255)
+  cores:
+    fundo: [20, 20, 30]              # Fundo escuro
+    tunel_teto: [100, 100, 100]      # Cinza teto
+    tunel_chao: [60, 40, 20]         # Marrom chão
+    robo: [0, 255, 100]              # Verde robô
+    robo_contorno: [0, 150, 50]      # Verde escuro contorno
+    falha: [255, 50, 50]             # Vermelho falhas
+    lidar_raio: [255, 200, 0]        # Amarelo LIDAR
+    painel_fundo: [30, 30, 40]       # Fundo painel
+    painel_texto: [200, 200, 200]    # Texto painel
+
+# ============================================================================
+# INTERFACE DE USUÁRIO
+# ============================================================================
+
+ui:
+  # Mostrar painel de informações?
+  mostrar_painel_info: true
+  
+  # Mostrar FPS?
+  mostrar_fps: true
+  
+  # Mostrar indicador MQTT?
+  mostrar_mqtt: true
+  
+  # Tamanho da fonte (padrão Pygame)
+  tamanho_fonte_pequena: 24
+  tamanho_fonte_media: 32
+  
+  # Atualizar painel a cada quantas frames?
+  atualizar_painel: 5
+
+# ============================================================================
+# LOGGING
+# ============================================================================
+
+logging:
+  # Nível de log: DEBUG, INFO, WARNING, ERROR
+  nivel: "INFO"
+  
+  # Salvar log em arquivo?
+  salvar_arquivo: false
+  
+  # Nome do arquivo de log
+  arquivo_log: "simulador.log"
+  
+  # Incluir timestamp nos logs?
+  incluir_timestamp: true
+
+# ============================================================================
+# MODO DE TESTE
+# ============================================================================
+
+teste:
+  # Duração da simulação (segundos)
+  # Se 0, roda indefinidamente até ESC
+  duracao_simulacao: 0
+  
+  # Modo offline (sem MQTT)?
+  modo_offline: false
+  
+  # Aceleração padrão quando offline (m/s²)
+  aceleracao_padrao_offline: 0.5
+  
+  # Publicar dados fictícios para teste?
+  publicar_dados_teste: false
+  
+  # Frequência de dados de teste (Hz)
+  frequencia_dados_teste: 10
+
+# ============================================================================
+# PERFORMANCE
+# ============================================================================
+
+performance:
+  # Número de pontos renderizados no túnel
+  # Menores = mais rápido mas menos detalhe
+  # step = 5 significa calcular cada 5 pixels
+  tunelstep_render: 5
+  
+  # Usar V-Sync? (sincroniza com monitor)
+  vsync: true
+  
+  # Limitar FPS ao máximo da tela?
+  limitar_fps: true
+  
+  # Debug mode (mostra mais informações)?
+  debug: false
